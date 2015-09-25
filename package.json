@@ -1,0 +1,21 @@
+{
+  "name": "nextbus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "echo",
+    "alexa",
+    "muni"
+  ],
+  "author": "Steve Gill",
+  "license": "ISC",
+  "dependencies": {
+    "alexa-app": "^2.1.2",
+    "request": "^2.60.0",
+    "xml2js": "^0.4.9"
+  }
+}
