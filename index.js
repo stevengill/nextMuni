@@ -2,7 +2,8 @@ var alexa = require('alexa-app');
 var app = new alexa.app('sample');
 var http = require('http');
 var parseString = require('xml2js').parseString;
-var token = "deec0e30-4a6f-4bec-b995-0accc4eb8b07";
+var token = require('./config.json')['511Token'];
+var buses = require('./bus.json');
 
 
 app.launch(function(request,response) {
@@ -39,23 +40,9 @@ app.intent('nextBus',
     //http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=deec0e30-4a6f-4bec-b995-0accc4eb8b07&agencyName=SF-MUNI&stopName=Masonic%20Ave%20and%20Hayes%20St
     //21
     //http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=deec0e30-4a6f-4bec-b995-0accc4eb8b07&agencyName=SF-MUNI&stopName=Hayes%20St%20and%20Masonic%20Ave
-    var buses = {
-        'five':{
-            'agencyName': 'SF-MUNI',
-            'stopName':'Fulton St and Masonic Ave'
-        },
-        'twenty-one': {
-            'agencyName': 'SF-MUNI',
-            'stopName':'Hayes St and Masonic Ave'
-        },
-        'fourty-three': {
-            'agencyName': 'SF-MUNI',
-            'stopName':'Masonic Ave and Hayes St'
-        }
-    }
     var bus = request.slot('bus');
     var getSchedule = false;
-    var url = "http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=" + token + "&agency=SF-MUNI&stopName=";
+    var url = "http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=" + token + "&agencyName=SF-MUNI&stopName=";
     console.log(bus);
     if(bus === "5" || bus === "five"){
         getSchedule = true;
@@ -70,7 +57,7 @@ app.intent('nextBus',
     }
     
     if(getSchedule) {
-        url = encodeURIComponent(url);
+        //url = encodeURIComponent(url);
         console.log(url);
         http.get(url, function(res) {
         //console.log(res)
@@ -111,4 +98,4 @@ exports.handler = app.lambda();
 
 console.log(app.utterances());
 console.log(app.schema());
-//console.log(app.launch())
+//console.log(app.intent())
