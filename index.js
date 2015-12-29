@@ -4,7 +4,19 @@ var http = require('http');
 var parseString = require('xml2js').parseString;
 var token = require('./config.json')['511Token'];
 var buses = require('./bus.json');
+var busNames = [];
 
+//Build array of bus names + number
+for (key in buses) {
+    console.log(key);
+    busNames.push(buses[key]['name']);
+}
+//add this array to the app's dictionary to later use to generate utterances
+app.dictionary = {
+    "bus-names": busNames
+};
+
+console.log(busNames)
 
 app.launch(function(request,response) {
     //response.say("Hello World");
@@ -12,25 +24,12 @@ app.launch(function(request,response) {
     //response.card("Hello World","This is an example card");
     response.say('welcome to next bus');
     response.shouldEndSession(false);
-    /*
-        http.get("http://services.my511.org/Transit2.0/GetNextDeparturesByStopCode.aspx?token=deec0e30-4a6f-4bec-b995-0accc4eb8b07&stopcode=14230", function(res2) {
-//http://services.my511.org/Transit2.0/GetNextDeparturesByStopCode.aspx?token=deec0e30-4a6f-4bec-b995-0accc4eb8b07&stopcode=15002
-            // This is async and will run after the http call returns 
-            response.say('getting bus schedules');
-            //console.log(res2);
-            // Must call send to end the original request 
-            response.send();
-        });*/
-    //});
-    // Return false immediately so alexa-app doesn't send the response 
-    //return false;
 });
 
 app.intent('nextBus',
   {
     "slots":{"bus":"NUMBER"}
-    ,"utterances":[ "{the|when is the|when's the} next {five|twenty-one|bus}",
-                    "next {five|twenty-one|bus}"]
+    ,"utterances":[ "{the|when is the|when's the} next {bus-names|bus}"]
   },
   function(request,response) {
     console.log('nextBus')
@@ -43,21 +42,17 @@ app.intent('nextBus',
     var bus = request.slot('bus');
     var getSchedule = false;
     var url = "http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=" + token + "&agencyName=SF-MUNI&stopName=";
-    console.log(bus);
-    if(bus === "5" || bus === "five"){
-        getSchedule = true;
-        url += buses[bus]['stopName']
-    } else if (bus === "21" || bus === "twenty-one") {
+    if(buses[bus]) {
         getSchedule = true;
         url += buses[bus]['stopName'];
-    } else if (bus === "43" || bus === "fourty-three") {
-        getSchedule = true;
-        url += buses[bus]['stopName'];
-        //response.say('Sorry, did not understand that');
+    } else {
+        //send a response saying we didn't understand the request   
+        console.log('bus: ' + bus + ' was not in buses list');
     }
-    
+    console.log(bus);
+    console.log(typeof bus)
+        
     if(getSchedule) {
-        //url = encodeURIComponent(url);
         console.log(url);
         http.get(url, function(res) {
         //console.log(res)
@@ -69,16 +64,22 @@ app.intent('nextBus',
             //response.send();
             parseString(buffer.toString(), function (err, result) {
                 console.log(JSON.stringify(result));
-                
-                //var arriving = result['RTT']['AgencyList'][0]['Agency'][0]['RouteList'][0]['Route'][0]['RouteDirectionList'][0]['RouteDirection'][0]['StopList'][0]['Stop'][0]['DepartureTimeList'][0]['DepartureTime'][0];
-                /*console.log(arriving);
-                if(five) {
-                    var fiveR = "never";
-                    //var fiveR = result['RTT']['AgencyList'][0]['Agency'][0]['RouteList'][0]['Route'][1]['RouteDirectionList'][0]['RouteDirection'][0]['StopList'][0]['Stop'][0]['DepartureTimeList'][0]['DepartureTime'][0];
-                    response.say('Next 5 fulton bus is arriving in ' + arriving + ' minutes and the 5 R is arriving in ' + fiveR + ' minutes.')
-                } else {
-                    response.say('Next 21 Hayes bus is ' + arriving + ' minutes away!');
-                }*/
+               	result = result['RTT']['AgencyList'][0]['Agency'][0]['RouteList'][0]['Route']
+				result.forEach(function(route) {
+    				//check if bus code is equivalent to what user asked 
+    				if(route['$']['Code'] === bus || route['$']['Code'] === bus+'R') {
+        				route['RouteDirectionList'][0]['RouteDirection'].forEach(function(routeDir) {
+            				//TODO: allow for users to add directions in bus.json
+                            //TODO: only output direction suplied
+                            var Direction = routeDir['$']['Name'];
+            				var DepList= routeDir['StopList'][0]['Stop'][0]['DepartureTimeList'][0]['DepartureTime'] 
+            				console.log(DepList)
+            				if(DepList) {
+                				response.say('Next '+route['$']['Name']+' going '+Direction+' is ' + DepList.join(', ')+ ' minutes away!\n');
+            				}
+        				})
+    				}
+				}) 
                 response.send();
             });
         
@@ -98,4 +99,3 @@ exports.handler = app.lambda();
 
 console.log(app.utterances());
 console.log(app.schema());
-//console.log(app.intent())

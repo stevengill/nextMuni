@@ -3,7 +3,7 @@
 This is an Alexa app to connect to the 511 service to get real time schedule for bay area buses and trains.
 
 ## Setup for yourself
-    1. Clone this repo
+    1. Clone this repo and run `npm install`
     2. [Sign up for 511 API Security Token](http://511.org/developer-resources_api-security-token_rtt.asp). Make a copy of `config.sample.json` named `config.json` and add your token in it. 
     3. Create a alexa app on amazon alexa website
     4. Make sure you have enabled your Alexa for development

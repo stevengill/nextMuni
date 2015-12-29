@@ -1,13 +1,16 @@
 {
     "5":{
+        "name": "five",
         "agencyName": "SF-MUNI",
         "stopName":"Fulton St and Masonic Ave"
     },
     "21": {
+        "name": "twenty-one",
         "agencyName": "SF-MUNI",
         "stopName": "Hayes St and Masonic Ave"
     },
     "43": {
+        "name": "fourty-three",
         "agencyName": "SF-MUNI",
         "stopName": "Masonic Ave and Hayes St"
     }
