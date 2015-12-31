@@ -5,8 +5,10 @@
   "main": "build/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register",
-    "build": "babel src -d build",
-    "zip": "zip -r src.zip src/"
+    "copy": "cp src/bus.json build/ && cp src/config.json build/",
+    "clean": "rm -rf build && rm -rf src.zip",
+    "build": "babel src -d build && npm run copy",
+    "zip": "npm run build && cp -r node_modules build/ && zip -r src.zip build/"
   },
   "keywords": [
     "echo",

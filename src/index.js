@@ -22,7 +22,7 @@ app.dictionary = {
 app.launch(function(request,response) {
     console.log('launch request');
     //response.card("Hello World","This is an example card");
-    response.say('hello');
+    //response.say('hello');
     response.shouldEndSession(false);
 });
 
@@ -33,15 +33,16 @@ app.intent('nextBus',
   },
   function(request,response) {
     console.log('nextBus')
-    var bus = request.slot('bus');
-    var getSchedule = false;
-    var url = "http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=" + token + "&agencyName=SF-MUNI&stopName=";
+    let bus = request.slot('bus');
+    let getSchedule = false;
+    let url = "http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=" + token + "&agencyName=SF-MUNI&stopName=";
     if(buses[bus]) {
         getSchedule = true;
         url += buses[bus]['stopName'];
     } else {
         //send a response saying we didn't understand the request   
         console.log('bus: ' + bus + ' was not in buses list');
+        response.fail('Your bus is not supported');
     }
     console.log(bus);
     console.log(typeof bus)
@@ -50,14 +51,13 @@ app.intent('nextBus',
         console.log(url);
         http.get(url, function(res) {
             var buffer = "";
-            res.on( "data", function( data ) { buffer = buffer + data; console.log('onData');} )
+            res.on( "data", function( data ) { buffer = buffer + data;} )
             res.on("error", function(e) {
                 console.log(e)
             })
             res.on( "end", function( data ) { 
-                console.log('here')
+                //send result to back to echo 
                 response.say(handleResult(buffer.toString(), bus)).send();
-                
             });
         });
     };
