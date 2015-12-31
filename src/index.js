@@ -1,8 +1,8 @@
 var alexa = require('alexa-app');
 var app = new alexa.app('sample');
-//var http = require('http');
-var token = require('../config.json');
-var buses = require('../bus.json');
+var http = require('http');
+var token = require('./config.json');
+var buses = require('./bus.json');
 var busNames = [];
 var handleResult = require('./handleResult');
 
@@ -22,7 +22,7 @@ app.dictionary = {
 app.launch(function(request,response) {
     console.log('launch request');
     //response.card("Hello World","This is an example card");
-    //resonse.say('hi');
+    response.say('hello');
     response.shouldEndSession(false);
 });
 
@@ -48,15 +48,18 @@ app.intent('nextBus',
         
     if(getSchedule) {
         console.log(url);
-        /*http.get(url, function(res) {
+        http.get(url, function(res) {
             var buffer = "";
-            res.on( "data", function( data ) { buffer = buffer + data; } );
+            res.on( "data", function( data ) { buffer = buffer + data; console.log('onData');} )
+            res.on("error", function(e) {
+                console.log(e)
+            })
             res.on( "end", function( data ) { 
-                var alexaresp = handleResult(buffer.toString(), bus);
-                console.log(alexaresp)
-                response.send(alexaresp)
+                console.log('here')
+                response.say(handleResult(buffer.toString(), bus)).send();
+                
             });
-        });*/
+        });
     };
     // Return false immediately so alexa-app doesn't send the response 
     return false; 
@@ -69,5 +72,5 @@ app.sessionEnded(function(request,response) {
 
 exports.handler = app.lambda();
 
-console.log(app.utterances());
-console.log(app.schema());
+//console.log(app.utterances());
+//console.log(app.schema());
