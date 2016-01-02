@@ -1,12 +1,10 @@
 var alexa = require('alexa-app');
 var app = new alexa.app('sample');
 var http = require('http');
-var token = require('./config.json');
+var token = require('./config.json')['511Token'];
 var buses = require('./bus.json');
 var busNames = [];
 var handleResult = require('./handleResult');
-
-token = token['511Token'];
 
 console.log(buses)
 //Build array of bus names + number
