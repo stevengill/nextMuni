@@ -8,7 +8,7 @@
     "copy": "cp src/bus.json build/ && cp src/config.json build/",
     "clean": "rm -rf build && rm -rf src.zip",
     "build": "babel src -d build && npm run copy",
-    "zip": "npm run build && cp -r node_modules build/ && zip -r src.zip build/"
+    "zip": "npm run build && cp -r node_modules build/ && cd build && zip -r ../src.zip ."
   },
   "keywords": [
     "echo",

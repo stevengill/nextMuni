@@ -26,7 +26,7 @@ app.launch(function(request,response) {
 
 app.intent('nextBus',
   {
-    "slots":{"bus":"NUMBER"}
+    "slots":{"bus":"AMAZON.NUMBER"}
     ,"utterances":[ "{the|when is the|when's the} next {bus-names|bus}"]
   },
   function(request,response) {
