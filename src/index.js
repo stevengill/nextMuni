@@ -1,17 +1,17 @@
-var alexa = require('alexa-app');
-var app = new alexa.app('sample');
-var http = require('http');
-var token = require('./config.json')['511Token'];
-var buses = require('./bus.json');
-var busNames = [];
-var handleResult = require('./handleResult');
+const alexa = require('alexa-app');
+const fetch = require('node-fetch');
+const app = new alexa.app('sample');
+const busesJson= require('./bus.json');
+const busNames = [];
+const handleResult = require('./handleResult');
 
-console.log(buses)
+console.log(busesJson)
 //Build array of bus names + number
-for (var key in buses) {
+for (let key in busesJson) {
     console.log(key);
-    busNames.push(buses[key]['name']);
+    busNames.push(busesJson[key]['name']);
 }
+
 //add this array to the app's dictionary to later use to generate utterances
 app.dictionary = {
     "bus-names": busNames
@@ -33,10 +33,11 @@ app.intent('nextBus',
     console.log('nextBus')
     let bus = request.slot('bus');
     let getSchedule = false;
-    let url = "http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=" + token + "&agencyName=SF-MUNI&stopName=";
-    if(buses[bus]) {
+    //let url = "http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=" + token + "&agencyName=SF-MUNI&stopName=";
+    let url = "http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&stopId="
+    if(busesJson[bus]) {
         getSchedule = true;
-        url += buses[bus]['stopName'];
+        url += buses[bus]['stopID'];
     } else {
         //send a response saying we didn't understand the request   
         console.log('bus: ' + bus + ' was not in buses list');
@@ -47,16 +48,10 @@ app.intent('nextBus',
         
     if(getSchedule) {
         console.log(url);
-        http.get(url, function(res) {
-            var buffer = "";
-            res.on( "data", function( data ) { buffer = buffer + data;} )
-            res.on("error", function(e) {
-                console.log(e)
-            })
-            res.on( "end", function( data ) { 
-                //send result to back to echo 
-                response.say(handleResult(buffer.toString(), bus)).send();
-            });
+        fetch(url)
+        .then(function(res) {
+            //send result to back to echo 
+            response.say(handleResult(res.text(), bus)).send();
         });
     };
     // Return false immediately so alexa-app doesn't send the response 

@@ -1,8 +1,8 @@
 const parseString = require("xml2js").parseString
 
-module.exports = function(stringBuffer, bus) {
+module.exports = function(res, bus) {
     let response = '';
-    parseString(stringBuffer, function (err, result) {
+    parseString(res, function (err, result) {
         result = result['RTT']['AgencyList'][0]['Agency'][0]['RouteList'][0]['Route']
             result.forEach((route) => {
                 //check if bus code is equivalent to what user asked 
