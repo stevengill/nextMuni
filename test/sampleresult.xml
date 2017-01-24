@@ -1,0 +1,10 @@
+<body copyright="All data copyright San Francisco Muni 2017.">
+<predictions agencyTitle="San Francisco Muni" routeTitle="21-Hayes" routeTag="21" stopTitle="Hayes St and Masonic Ave" stopTag="5001">
+<direction title="Outbound to Stanyan Street">
+<prediction epochTime="1485235174104" seconds="496" minutes="8" isDeparture="false" dirTag="21___O_F00" vehicle="8130" block="2103" tripTag="7241657"/>
+<prediction epochTime="1485236475294" seconds="1798" minutes="29" isDeparture="false" affectedByLayover="true" dirTag="21___O_F00" vehicle="8808" block="2105" tripTag="7241658"/>
+<prediction epochTime="1485237735294" seconds="3058" minutes="50" isDeparture="false" affectedByLayover="true" dirTag="21___O_F00" vehicle="8121" block="2110" tripTag="7241659"/>
+</direction>
+<message text="Some vehicles may be missing from predictions. Our apologies." priority="Low"/>
+</predictions>
+</body>

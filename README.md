@@ -4,13 +4,13 @@ This is an Alexa app to connect to the 511 service to get real time schedule for
 
 ## Setup for yourself
     1. Clone this repo and run `npm install`
-    2. [Sign up for 511 API Security Token](http://511.org/developer-resources_api-security-token_rtt.asp). Make a copy of `config.sample.json` named `config.json` and add your token in it. 
+    2. [Sign up for 511 API Security Token](http://511.org/developer-resources_api-security-token_rtt.asp). Make a copy of `config.sample.json` named `config.json` and add your token in it.
     3. Create a alexa app on amazon alexa website
     4. Make sure you have enabled your Alexa for development
-    5. Setup a Amazon lambda instanace and connect with alexa app
+    5. Setup a Amazon lambda instance and connect with alexa app
     6. Generate utterances and copy over to alexa app website
     7. Add buses to `bus.json`
-    8. Zip this repo and upload to lambda 
+    8. Zip this repo and upload to lambda
 
 
 ## 511 API Docs
