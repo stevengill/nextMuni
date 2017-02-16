@@ -9,6 +9,8 @@ module.exports = function(res, bus) {
 
     // converts xml to json
     parseString(res, function (err, result) {
+      console.log(err);
+      console.log(result);
       console.log(result["body"]["predictions"][0]["direction"][0]["prediction"])
       //[0]["$"]['minutes']
       result = result["body"]["predictions"][0]["direction"][0]["prediction"]
