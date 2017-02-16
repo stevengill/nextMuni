@@ -2,7 +2,7 @@
 
 const alexa = require('alexa-app');
 const fetch = require('node-fetch');
-const app = new alexa.app('sample');
+const app = new alexa.app();
 const busesJson= require('./bus.json');
 const busNames = [];
 const handleResult = require('./handleResult');
@@ -26,40 +26,30 @@ app.launch(function(request,response) {
     response.shouldEndSession(false);
 });
 
-app.intent('nextBus',
-  {
-    "slots":{"bus":"AMAZON.NUMBER"}
-    ,"utterances":[ "{the|when is the|when's the} next {bus-names|bus}"]
-  },
-  function(request,response) {
+app.intent('nextbus', (request,response) => {
     console.log('nextBus')
     let bus = request.slot('bus');
-    let getSchedule = false;
-    //let url = "http://services.my511.org/Transit2.0/GetNextDeparturesByStopName.aspx?token=" + token + "&agencyName=SF-MUNI&stopName=";
     let url = "http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&stopId="
     if(busesJson[bus]) {
-        getSchedule = true;
         url += busesJson[bus]['stopID'];
     } else {
         //send a response saying we didn't understand the request
         console.log('bus: ' + bus + ' was not in buses list');
         response.fail('Your bus is not supported');
+        return false;
     }
     console.log(bus);
     console.log(typeof bus)
 
-    if(getSchedule) {
-        console.log(url);
-        fetch(url)
-        .then(function(res) {
-            //send result to back to echo
-            response.say(handleResult(res.text(), bus)).send();
-        });
-    };
-    // Return false immediately so alexa-app doesn't send the response
-    return false;
+    console.log(url);
+    return fetch(url)
+    .then(function(res) {
+        //send result to back to echo
+        response.say(handleResult(res.text(), bus)).send();
+    });
   }
 );
+
 app.sessionEnded(function(request,response) {
     // No response necessary
     console.log('session end');
