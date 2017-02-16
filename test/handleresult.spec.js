@@ -5,5 +5,5 @@ const fs = require ("fs")
 
 fs.readFile("sampleresult.xml", 'utf8', (err, data) => {
   if (err) throw err;
-  handleResult(data, 21)
+  console.log("This is a response", handleResult(data, 21))
 })

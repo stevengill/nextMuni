@@ -1,12 +1,15 @@
-"use strict;"
+"use strict"
 const parseString = require("xml2js").parseString
 
+// res is xml, bus is bus number.
 module.exports = function(res, bus) {
     var response = '';
     console.log(res)
     console.log(bus)
+
+    // converts xml to json
     parseString(res, function (err, result) {
-      //console.log(result["body"]["predictions"][0]["direction"][0]["prediction"])
+      console.log(result["body"]["predictions"][0]["direction"][0]["prediction"])
       //[0]["$"]['minutes']
       result = result["body"]["predictions"][0]["direction"][0]["prediction"]
       var minutesAway = []
@@ -15,7 +18,7 @@ module.exports = function(res, bus) {
             minutesAway.push(pred['$']['minutes'])
 
         })
-        console.log("the bus is " + minutesAway.join(",") + " minutes away")
+        console.log("the bus is " + minutesAway.join(", ") + " minutes away")
       //console.log(JSON.stringify(result["body"]["predictions"][0]["direction"]))
         /*result = result['RTT']['AgencyList'][0]['Agency'][0]['RouteList'][0]['Route']
             result.forEach((route) => {
@@ -33,6 +36,7 @@ module.exports = function(res, bus) {
                     })
                 }
             })*/
+            response += `Next ${bus} is ${minutesAway.join(", ")} minutes away!\n`;
     });
-    //return response;
+    return response;
 }

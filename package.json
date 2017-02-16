@@ -2,11 +2,11 @@
   "name": "nextbus",
   "version": "1.0.0",
   "description": "",
-  "main": "build/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha",
     "clean": "rm -rf src.zip",
-    "zip": "zip -r ./src.zip ."
+    "zip": "zip -r ./src.zip src"
   },
   "keywords": [
     "echo",
