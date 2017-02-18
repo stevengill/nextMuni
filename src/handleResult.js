@@ -1,13 +1,21 @@
 "use strict"
 const parseString = require("xml2js").parseString
 
-// res is xml, bus is bus number.
+/*
+ * Parses xml from 511 server and returns a string.
+ * @param {xml} res - response from 511 server
+ * @param {string} bus - holds bus number
+ * @return {string} response - response containing bus predictions
+*/
 module.exports = function(res, bus) {
     var response = '';
     console.log(res)
     console.log(bus)
 
-    // converts xml to json
+    /* Converts xml to json.
+     * @param {xml} res - response from 511 server
+     * @param {function} - callback function containing json representation of res.
+     */
     parseString(res, function (err, result) {
       console.log(err);
       console.log(result);
