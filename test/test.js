@@ -1,15 +1,21 @@
-var assert = require('assert');
-var sampleResult = require('./sampleResult')
-var handleResult = require('../src/handleResult')
-var should = require('should')
+"use strict"
+const fs = require("fs")
+const handleResult = require('../src/handleResult')
+const should = require('should')
+
+
+const sampleResult = fs.readFileSync("test/sampleresult.xml", {"encoding":"utf8"})
 
 describe('handleResult', function() {
-    var bus = '5';
+    let bus = '21';
     it('check returned value', function() {
-        var response = handleResult(sampleResult, bus);
+        let response = handleResult(sampleResult, bus);
         response.should.be.type('string');
-        response.should.be.eql('Next 5-Fulton going Inbound to Downtown is 7, 22, 42 minutes away!\nNext 5-Fulton going Outbound to Ocean Beach is 8, 20 minutes away!\n');
+        console.log("this is fun", response)
+
+        response.should.be.eql('Next 21 is 8, 29, 50 minutes away!\n');
     });
 })
+
 
 //console.log(handleResult(sampleResult, '5'))
